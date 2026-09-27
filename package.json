@@ -1,0 +1,22 @@
+{
+  "name": "github-repo-mcp",
+  "version": "1.0.0",
+  "description": "MCP server with a single tool that fetches public GitHub repository info via the GitHub REST API",
+  "type": "module",
+  "scripts": {
+    "start": "tsx --env-file-if-exists=.env src/index.ts",
+    "typecheck": "tsc",
+    "inspect": "npx @modelcontextprotocol/inspector npx tsx --env-file-if-exists=.env src/index.ts"
+  },
+  "keywords": ["mcp", "github"],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.1.0",
+    "tsx": "^4.23.13",
+    "zod": "^4.6.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "typescript": "^7.0.2"
+  }
+}
