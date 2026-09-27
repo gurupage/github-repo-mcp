@@ -6,15 +6,19 @@
   "scripts": {
     "start": "tsx --env-file-if-exists=.env src/index.ts",
     "typecheck": "tsc",
-    "inspect": "npx @modelcontextprotocol/inspector npx tsx --env-file-if-exists=.env src/index.ts"
+    "inspect": "mcp-inspector npx tsx --env-file-if-exists=.env src/index.ts"
   },
-  "keywords": ["mcp", "github"],
+  "keywords": [
+    "mcp",
+    "github"
+  ],
   "dependencies": {
     "@modelcontextprotocol/server": "^2.1.0",
     "tsx": "^4.23.13",
     "zod": "^4.6.4"
   },
   "devDependencies": {
+    "@modelcontextprotocol/inspector": "^2.8.0",
     "@types/node": "^22.20.2",
     "typescript": "^7.0.2"
   }

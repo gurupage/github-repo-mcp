@@ -16,13 +16,15 @@ MCP クライアント（Claude Code など）がこのサーバーを子プロ�
 
 ## 必要なもの
 
-- Node.js 22.9 以上（`--env-file-if-exists` を使うため）
+- Node.js 22.19 以上（MCP Inspector を使わない場合は 22.9 以上で動きます）
 
 ## セットアップ
 
 ```bash
 npm install
 ```
+
+サーバーの実行に必要なパッケージと、動作確認用の MCP Inspector がダウンロードされます。
 
 ### GitHub トークン（任意）
 
@@ -67,8 +69,52 @@ claude mcp add github-repo --scope user -- npx tsx <このリポジトリの絶�
 
 ### MCP Inspector で試す
 
+[MCP Inspector](https://github.com/modelcontextprotocol/inspector) は、MCP サーバーをブラウザの画面から試せる公式の開発ツールです。
+Claude Code などに登録しなくても、ツールの一覧を見たり、引数を入れてツールを呼び出したりできます。
+
+**1. MCP Inspector をダウンロードする**
+
+MCP Inspector はこのリポジトリの開発用の依存パッケージ（`devDependencies` の `@modelcontextprotocol/inspector`）に入れてあります。
+「セットアップ」の `npm install` を実行すると、サーバー本体の依存と一緒に `node_modules/` へダウンロードされます。
+
+ダウンロードできたかは、次のコマンドで確認できます（使い方が表示されれば OK です）。
+
+```bash
+npx mcp-inspector --help
+```
+
+> MCP Inspector 2.8 は Node.js 22.19 以上が必要です。
+
+**2. MCP Inspector を起動する**
+
 ```bash
 npm run inspect
+```
+
+MCP Inspector がこのサーバーを子プロセス（stdio）として起動し、ブラウザで画面が開きます。
+ブラウザが自動で開かない場合は、ターミナルに表示された `http://127.0.0.1:6274?MCP_INSPECTOR_API_TOKEN=...` の URL を開いてください（URL の中のトークンは起動するたびに変わります）。
+
+**3. ツールを呼び出す**
+
+1. 「Servers」タブのサーバーのスイッチをオンにして、「Connected」になることを確認する
+2. 画面上部の「Tools」タブを開き、一覧から `get-repo` を選ぶ
+3. `owner` に `modelcontextprotocol`、`repo` に `typescript-sdk` を入力する
+4. 「Execute Tool」を押す
+5. 「Results」にリポジトリ名・説明・スター数・言語・URL が表示されれば成功
+
+存在しないリポジトリ名を入れると、エラーの理由（`Repository not found ...`）が返ることも確認できます。
+終わったらターミナルで `Ctrl + C` を押して止めます。
+
+**ブラウザを使わずに試す（CLI モード）**
+
+MCP Inspector はコマンドだけでも使えます。
+
+```bash
+# ツールの一覧を見る
+npx mcp-inspector --cli npx tsx src/index.ts --method tools/list
+
+# get-repo を呼び出す
+npx mcp-inspector --cli npx tsx src/index.ts --method tools/call --tool-name get-repo --tool-arg owner=modelcontextprotocol repo=typescript-sdk
 ```
 
 ### JSON-RPC を直接送って試す
