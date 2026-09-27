@@ -93,7 +93,3 @@ src/
 test/
   get-repo.jsonl  # 動作確認用の JSON-RPC メッセージ
 ```
-
-## License
-
-MIT

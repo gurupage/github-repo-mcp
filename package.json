@@ -9,7 +9,6 @@
     "inspect": "npx @modelcontextprotocol/inspector npx tsx --env-file-if-exists=.env src/index.ts"
   },
   "keywords": ["mcp", "github"],
-  "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/server": "^2.1.0",
     "tsx": "^4.23.13",
