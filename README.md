@@ -3,6 +3,9 @@
 GitHub REST API で公開リポジトリの情報を取得する、ツール1つだけの MCP サーバーです。
 [MCP TypeScript SDK v2](https://github.com/modelcontextprotocol/typescript-sdk) の学習用に作りました。
 
+ローカルで **stdio（標準入出力）** で動かす前提です。HTTP での公開（リモートサーバー）には対応していません。
+MCP クライアント（Claude Code など）がこのサーバーを子プロセスとして起動し、標準入力・標準出力で JSON-RPC メッセージをやりとりします。
+
 ## 提供するツール
 
 | ツール名 | 引数 | 返す内容 |
@@ -31,7 +34,36 @@ npm install
 
 ### Claude Code から使う
 
-このリポジトリのディレクトリで Claude Code を起動すると、`.mcp.json` に定義した `github-repo` サーバーが読み込まれます。
+**このリポジトリの中で使う場合**
+
+このリポジトリのディレクトリで Claude Code を起動すると、`.mcp.json` に定義した `github-repo` サーバーが読み込まれます（初回は読み込みの承認を求められます）。
+
+**ほかのディレクトリからも使う場合**
+
+`claude mcp add` でユーザー全体に登録します。`<このリポジトリの絶対パス>` は自分の環境に合わせて置き換えてください。
+
+```bash
+claude mcp add github-repo --scope user -- npx tsx <このリポジトリの絶対パス>/src/index.ts
+```
+
+この登録方法では `.env` は読み込まれません。トークンを使う場合は `-e GITHUB_TOKEN=...` を付けて登録してください。
+
+登録できたかは `claude mcp list` で確認できます。
+
+### Claude Desktop から使う
+
+`claude_desktop_config.json` の `mcpServers` に次のように追加します。
+
+```json
+{
+  "mcpServers": {
+    "github-repo": {
+      "command": "npx",
+      "args": ["tsx", "<このリポジトリの絶対パス>/src/index.ts"]
+    }
+  }
+}
+```
 
 ### MCP Inspector で試す
 
@@ -46,6 +78,11 @@ cat test/get-repo.jsonl | npx tsx src/index.ts
 ```
 
 存在するリポジトリと存在しないリポジトリの 2 パターンを呼び出します。
+結果は標準出力に JSON-RPC のレスポンスとして 1 行ずつ出ます（順番は前後することがあります）。
+
+## 注意
+
+- stdio では標準出力が MCP の通信に使われます。サーバーのコードで `console.log` を使うと通信が壊れるため、ログは `console.error`（標準エラー出力）に出してください。
 
 ## ファイル構成
 
