@@ -120,8 +120,13 @@ npx mcp-inspector --cli npx tsx src/index.ts --method tools/call --tool-name get
 ### JSON-RPC を直接送って試す
 
 ```bash
-cat test/get-repo.jsonl | npx tsx src/index.ts
+(cat test/get-repo.jsonl; sleep 5) | npx tsx src/index.ts
 ```
+
+`sleep 5` で、メッセージを送り終えたあとも 5 秒間は標準入力を開いたままにします。
+標準入力が閉じるとサーバーは終了するので、`cat test/get-repo.jsonl | ...` だけだと、GitHub API への問い合わせ（非同期の処理）の結果が返る前にサーバーが終わってしまいます。
+
+> Windows では Git Bash で実行してください（PowerShell では書き方が異なります）。
 
 存在するリポジトリと存在しないリポジトリの 2 パターンを呼び出します。
 結果は標準出力に JSON-RPC のレスポンスとして 1 行ずつ出ます（順番は前後することがあります）。
